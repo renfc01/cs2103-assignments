@@ -167,6 +167,12 @@ public class TextBuddypp {
 	
 	
 	
+	public static void sort(ArrayList<String> list) {
+		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+		System.out.println(MESSAGE_SORT);
+	}
+	
+	
 	// writes the contents of the ArrayList to the specified output file
 	public static void writeToFile(String fileName, ArrayList<String> list) {
 		File file = new File(fileName);

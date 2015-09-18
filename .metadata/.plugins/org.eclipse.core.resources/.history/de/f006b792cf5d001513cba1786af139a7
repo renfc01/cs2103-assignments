@@ -114,10 +114,7 @@ public class TextBuddypp {
 		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_CLEAR)) {
 			clear(fileName, list);
 		
-		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_SORT)) {
-			sort(list);
-		
-		}	
+		} 	
 	}
 
 	public static void add(String[] commands, String fileName, ArrayList<String> list) {

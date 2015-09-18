@@ -47,18 +47,5 @@ public class TestCE2 {
 		assertEquals(lst, lst2);
 	}
 	
-	@Test
-	public void testSort() {
-		ArrayList<String> lst = new ArrayList<String>();
-		ArrayList<String> lst2 = new ArrayList<String>(
-				Arrays.asList("Apples", "Ben", "Dan", "Jack", "John"));
-		lst.add("Jack");
-		lst.add("Ben");
-		lst.add("Apples");
-		lst.add("John");
-		lst.add("Dan");
-		TextBuddypp.sort(lst);
-		assertEquals(lst, lst2);
-	}
 	
 }
