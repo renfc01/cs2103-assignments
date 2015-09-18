@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TestCE2" project="cs2103" tests="5" started="5" failures="0" errors="0" ignored="0">
+  <testsuite name="ce2.TestCE2" time="0.001">
+    <testcase name="testAdd" classname="ce2.TestCE2" time="0.001"/>
+    <testcase name="testContainsExactly" classname="ce2.TestCE2" time="0.0"/>
+    <testcase name="testClear" classname="ce2.TestCE2" time="0.0"/>
+    <testcase name="testSort" classname="ce2.TestCE2" time="0.0"/>
+    <testcase name="testDelete" classname="ce2.TestCE2" time="0.0"/>
+  </testsuite>
+</testrun>

@@ -117,9 +117,7 @@ public class TextBuddypp {
 		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_SORT)) {
 			sort(list);
 		
-		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_SEARCH)) {
-			search(list, commands);
-		}		
+		}	
 	}
 
 	public static void add(String[] commands, String fileName, ArrayList<String> list) {
@@ -167,36 +165,13 @@ public class TextBuddypp {
 		System.out.println(String.format(MESSAGE_CLEAR, fileName));
 	}
 	
-	public static void search(ArrayList<String> list, String[] commands) {
-		String target = commands[COMMAND_SEARCH_TARGET];
-		ArrayList<String> results = new ArrayList<String>();
-		for (int i = 0; i < list.size(); i++) {
-			if (containsExactly(list.get(i), target)) {
-				results.add(list.get(i));
-			}
-		}
-		int counter = 0;
-		for (int i = 0; i < results.size(); i++) {
-			counter ++;
-			System.out.println(String.format(MESSAGE_DISPLAY, counter, results.get(i)));
-		}
-		if (counter == 0) {
-			System.out.println(MESSAGE_NO_SEARCH_RESULTS);
-		}
-	}
+	
 	
 	public static void sort(ArrayList<String> list) {
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		System.out.println(MESSAGE_SORT);
 	}
 	
-	//returns true if src contains a string subString exactly
-	public static boolean containsExactly(String src, String subString){
-        String toMatch = "\\b"+subString+"\\b";
-        Pattern p = Pattern.compile(toMatch);
-        Matcher m = p.matcher(src);
-        return m.find();
-   }
 	
 	// writes the contents of the ArrayList to the specified output file
 	public static void writeToFile(String fileName, ArrayList<String> list) {
