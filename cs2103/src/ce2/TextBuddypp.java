@@ -1,0 +1,187 @@
+package ce2;
+
+
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class TextBuddypp {
+	
+	final static int FILENAME_LOC = 0;
+	final static int MIN_COMMAND_ARRAY_LENGTH = 1;
+	final static int DELETE_COMMAND_ARRAY_LENGTH = 2;
+	final static int SORT_COMMAND_ARRAY_LENGTH = 1;
+	final static int SEARCH_COMMAND_ARRAY_LENGTH = 2;
+	final static int COMMAND_ARGUMENT_POSITION = 0;
+	final static int COMMAND_SEARCH_TARGET = 1;
+	
+	final static String MESSAGE_WELCOME = "Welcome to TextBuddy. %s is ready for use"; 
+	final static String MESSAGE_INVALID_INPUT = "Invalid input";
+	final static String MESSAGE_ADD = "added to %s: \"%s\"";
+	final static String MESSAGE_DISPLAY = "%s. %s";
+	final static String MESSAGE_DELETE = "deleted from %s: \"%s\"";
+	final static String MESSAGE_INVALID_DELETE = "Invalid delete operation";
+	final static String MESSAGE_LIST_EMPTY = "%s is empty";
+	final static String MESSAGE_CLEAR = "All content deleted from %s";
+	final static String MESSAGE_INVALID_NUMBER_ERROR = "Invalid number";
+	final static String MESSAGE_NO_SEARCH_RESULTS = "No search results";
+	final static String MESSAGE_SORT = "Sort successful";
+	final static String COMMAND_PROMPT = "Command: ";
+	final static String COMMAND_ADD = "add";
+	final static String COMMAND_DISPLAY = "display";
+	final static String COMMAND_DELETE = "delete";
+	final static String COMMAND_SORT = "sort";
+	final static String COMMAND_SEARCH = "search";
+	final static String COMMAND_CLEAR = "clear";
+	final static String COMMAND_EXIT = "exit";
+	final static String SPLIT_COMMAND_DELIMITER = " ";
+
+	
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		ArrayList<String> list = new ArrayList<String>();
+		String fileName = args[FILENAME_LOC];
+		welcomeMessage(fileName);
+		System.out.print(COMMAND_PROMPT);
+
+		while (sc.hasNextLine()) {
+			String userInput = sc.nextLine();
+			String[] commands = userInput.split(SPLIT_COMMAND_DELIMITER);
+
+			if (!isValidInput(commands)) {
+				continue;
+				
+			} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_EXIT)) {
+				writeToFile(fileName, list);
+				break;
+				
+			} else {
+				executeCommand(commands, list, fileName);
+			}
+			System.out.print(COMMAND_PROMPT);
+		}
+	}
+
+	//prints welcome message
+	public static void welcomeMessage(String fileName) {
+		System.out.println(String.format(MESSAGE_WELCOME, fileName));
+	}
+
+	//validates if user input is of the correct format
+	public static boolean isValidInput(String[] commands) {
+		int lengthArgs = commands.length;
+
+		if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_ADD) && lengthArgs > MIN_COMMAND_ARRAY_LENGTH) {
+			return true;
+			
+		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_DISPLAY) && lengthArgs == MIN_COMMAND_ARRAY_LENGTH
+				|| commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_CLEAR) && lengthArgs == MIN_COMMAND_ARRAY_LENGTH
+				|| commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_EXIT) && lengthArgs == MIN_COMMAND_ARRAY_LENGTH
+				|| commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_SEARCH) && lengthArgs == SEARCH_COMMAND_ARRAY_LENGTH
+				|| commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_SORT) && lengthArgs == SORT_COMMAND_ARRAY_LENGTH) {
+			return true;
+		}
+
+		else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_DELETE) && lengthArgs == DELETE_COMMAND_ARRAY_LENGTH) {
+			return true;
+		}
+
+		else {
+			System.out.println(MESSAGE_INVALID_INPUT);
+			return false;
+		}
+	}
+	
+	// identifies and performs the required command
+	public static void executeCommand(String[] commands, ArrayList<String> list, String fileName) {
+		if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_ADD)) {
+			add(commands, fileName, list);
+			
+		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_DISPLAY)) {
+			display(fileName, list);
+		
+		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_DELETE)) {
+			delete(commands, fileName, list);
+		
+		} else if (commands[COMMAND_ARGUMENT_POSITION].equals(COMMAND_CLEAR)) {
+			clear(fileName, list);
+		
+		} 	
+	}
+
+	public static void add(String[] commands, String fileName, ArrayList<String> list) {
+		String result = "";
+		for (int i = 1; i < commands.length - 1; i++) {
+			result += commands[i];
+			result += " ";
+		}
+		result += commands[commands.length - 1];
+		list.add(result);
+		System.out.println(String.format(MESSAGE_ADD, fileName, result));
+	}
+
+	public static void display(String fileName, ArrayList<String> list) {
+		if (list.size() == 0) {
+			System.out.println(String.format(MESSAGE_LIST_EMPTY, fileName));
+		}
+		else {
+			int counter = 1;
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(String.format(MESSAGE_DISPLAY, counter, list.get(i)));
+				counter ++;
+			}
+		}
+	}
+
+	public static void delete(String[] commands, String fileName, ArrayList<String> list) {
+		try {
+			Integer toDelete = Integer.valueOf(commands[1]);
+			if (toDelete > list.size()) {
+				System.out.println(MESSAGE_INVALID_DELETE);
+			}
+			else {
+				System.out.println(String.format(MESSAGE_DELETE, fileName, list.get(toDelete - 1)));
+				list.remove(toDelete - 1);
+			}
+		}
+		catch (NumberFormatException e) {
+			System.out.println(MESSAGE_INVALID_NUMBER_ERROR);
+		}
+	}
+
+	public static void clear(String fileName, ArrayList<String> list) {
+		list.clear();
+		System.out.println(String.format(MESSAGE_CLEAR, fileName));
+	}
+	
+	
+	
+	// writes the contents of the ArrayList to the specified output file
+	public static void writeToFile(String fileName, ArrayList<String> list) {
+		File file = new File(fileName);
+		try {
+			if (file.exists()) {
+				file.delete();
+			}
+			file.createNewFile();
+			PrintWriter printWriter = new PrintWriter(file);
+			int counter = 1;
+			for (int i = 0; i < list.size(); i++) {
+				printWriter.println(String.format(MESSAGE_DISPLAY, counter, list.get(i)));
+				counter ++;
+			}
+			printWriter.close();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
